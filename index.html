@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css"><link rel="stylesheet" href="css/L.Control.Locate.min.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-search.css">
+        <link rel="stylesheet" href="css/leaflet-control-geocoder.Geocoder.css">
+        <style>
+        #map {
+            width: 1066px;
+            height: 619px;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script><script src="js/L.Control.Locate.min.js"></script>
+        <script src="js/multi-style-layer.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
+        <script src="js/leaflet-search.js"></script>
+        <script src="data/TOWNSOFNAMIBIARegions_1.js"></script>
+        <script src="data/TOWNSOFNAMIBIARoads_2.js"></script>
+        <script src="data/TOWNSOFNAMIBIATowns_3.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString') {
+              highlightLayer.setStyle({
+                color: '#ffff00',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: '#ffff00',
+                fillOpacity: 1
+              });
+            }
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[-28.957503899932433,6.41646618299184],[-17.10530556447621,26.85526525742526]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        L.control.locate({locateOptions: {maxZoom: 19}}).addTo(map);
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_OSMStandard_0');
+        map.getPane('pane_OSMStandard_0').style.zIndex = 400;
+        var layer_OSMStandard_0 = L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            pane: 'pane_OSMStandard_0',
+            opacity: 1.0,
+            attribution: '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors, CC-BY-SA</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 19
+        });
+        layer_OSMStandard_0;
+        map.addLayer(layer_OSMStandard_0);
+        function pop_TOWNSOFNAMIBIARegions_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">REGION_NAM</th>\
+                        <td>' + (feature.properties['REGION_NAM'] !== null ? autolinker.link(feature.properties['REGION_NAM'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">REGION_COD</th>\
+                        <td>' + (feature.properties['REGION_COD'] !== null ? autolinker.link(feature.properties['REGION_COD'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">COUNT</th>\
+                        <td>' + (feature.properties['COUNT'] !== null ? autolinker.link(feature.properties['COUNT'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">AREA</th>\
+                        <td>' + (feature.properties['AREA'] !== null ? autolinker.link(feature.properties['AREA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">GAVPrimary</th>\
+                        <td>' + (feature.properties['GAVPrimary'] !== null ? autolinker.link(feature.properties['GAVPrimary'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ID</th>\
+                        <td>' + (feature.properties['ID'] !== null ? autolinker.link(feature.properties['ID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Leng</th>\
+                        <td>' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Area</th>\
+                        <td>' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_TOWNSOFNAMIBIARegions_1_0() {
+            return {
+                pane: 'pane_TOWNSOFNAMIBIARegions_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(164,113,88,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_TOWNSOFNAMIBIARegions_1');
+        map.getPane('pane_TOWNSOFNAMIBIARegions_1').style.zIndex = 401;
+        map.getPane('pane_TOWNSOFNAMIBIARegions_1').style['mix-blend-mode'] = 'normal';
+        var layer_TOWNSOFNAMIBIARegions_1 = new L.geoJson(json_TOWNSOFNAMIBIARegions_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_TOWNSOFNAMIBIARegions_1',
+            layerName: 'layer_TOWNSOFNAMIBIARegions_1',
+            pane: 'pane_TOWNSOFNAMIBIARegions_1',
+            onEachFeature: pop_TOWNSOFNAMIBIARegions_1,
+            style: style_TOWNSOFNAMIBIARegions_1_0,
+        });
+        bounds_group.addLayer(layer_TOWNSOFNAMIBIARegions_1);
+        map.addLayer(layer_TOWNSOFNAMIBIARegions_1);
+        function pop_TOWNSOFNAMIBIARoads_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Id</th>\
+                        <td>' + (feature.properties['Id'] !== null ? autolinker.link(feature.properties['Id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_TOWNSOFNAMIBIARoads_2_0() {
+            return {
+                pane: 'pane_TOWNSOFNAMIBIARoads_2',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: 4.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        function style_TOWNSOFNAMIBIARoads_2_1() {
+            return {
+                pane: 'pane_TOWNSOFNAMIBIARoads_2',
+                opacity: 1,
+                color: 'rgba(255,196,0,1.0)',
+                dashArray: '',
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: 3.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_TOWNSOFNAMIBIARoads_2');
+        map.getPane('pane_TOWNSOFNAMIBIARoads_2').style.zIndex = 402;
+        map.getPane('pane_TOWNSOFNAMIBIARoads_2').style['mix-blend-mode'] = 'normal';
+        var layer_TOWNSOFNAMIBIARoads_2 = new L.geoJson.multiStyle(json_TOWNSOFNAMIBIARoads_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_TOWNSOFNAMIBIARoads_2',
+            layerName: 'layer_TOWNSOFNAMIBIARoads_2',
+            pane: 'pane_TOWNSOFNAMIBIARoads_2',
+            onEachFeature: pop_TOWNSOFNAMIBIARoads_2,
+            styles: [style_TOWNSOFNAMIBIARoads_2_0,style_TOWNSOFNAMIBIARoads_2_1,]
+        });
+        bounds_group.addLayer(layer_TOWNSOFNAMIBIARoads_2);
+        map.addLayer(layer_TOWNSOFNAMIBIARoads_2);
+        function pop_TOWNSOFNAMIBIATowns_3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">NAME</th>\
+                        <td>' + (feature.properties['NAME'] !== null ? autolinker.link(feature.properties['NAME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_TOWNSOFNAMIBIATowns_3_0(feature) {
+            switch(String(feature.properties['NAME'])) {
+                case 'Eenhana':
+                    return {
+                pane: 'pane_TOWNSOFNAMIBIATowns_3',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(48,18,59,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Gobabis':
+                    return {
+                pane: 'pane_TOWNSOFNAMIBIATowns_3',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(66,74,180,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Katima Mulilo':
+                    return {
+                pane: 'pane_TOWNSOFNAMIBIATowns_3',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(70,126,245,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Keetmanshoop':
+                    return {
+                pane: 'pane_TOWNSOFNAMIBIATowns_3',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(49,175,245,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Mariental':
+                    return {
+                pane: 'pane_TOWNSOFNAMIBIATowns_3',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(24,219,198,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Opuwo':
+                    return {
+                pane: 'pane_TOWNSOFNAMIBIATowns_3',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(58,244,144,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Oshakati':
+                    return {
+                pane: 'pane_TOWNSOFNAMIBIATowns_3',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(133,255,81,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Otjiwarongo':
+                    return {
+                pane: 'pane_TOWNSOFNAMIBIATowns_3',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(190,244,52,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Rundu':
+                    return {
+                pane: 'pane_TOWNSOFNAMIBIATowns_3',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(234,212,57,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Swakopmund':
+                    return {
+                pane: 'pane_TOWNSOFNAMIBIATowns_3',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(254,169,51,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Tsumeb':
+                    return {
+                pane: 'pane_TOWNSOFNAMIBIATowns_3',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(247,111,26,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Uutapi':
+                    return {
+                pane: 'pane_TOWNSOFNAMIBIATowns_3',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(222,62,8,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Windhoek':
+                    return {
+                pane: 'pane_TOWNSOFNAMIBIATowns_3',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(179,27,1,1.0)',
+                interactive: true,
+            }
+                    break;
+                default:
+                    return {
+                pane: 'pane_TOWNSOFNAMIBIATowns_3',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(122,4,3,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_TOWNSOFNAMIBIATowns_3');
+        map.getPane('pane_TOWNSOFNAMIBIATowns_3').style.zIndex = 403;
+        map.getPane('pane_TOWNSOFNAMIBIATowns_3').style['mix-blend-mode'] = 'normal';
+        var layer_TOWNSOFNAMIBIATowns_3 = new L.geoJson(json_TOWNSOFNAMIBIATowns_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_TOWNSOFNAMIBIATowns_3',
+            layerName: 'layer_TOWNSOFNAMIBIATowns_3',
+            pane: 'pane_TOWNSOFNAMIBIATowns_3',
+            onEachFeature: pop_TOWNSOFNAMIBIATowns_3,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_TOWNSOFNAMIBIATowns_3_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_TOWNSOFNAMIBIATowns_3);
+        map.addLayer(layer_TOWNSOFNAMIBIATowns_3);
+        var osmGeocoder = new L.Control.Geocoder({
+            collapsed: true,
+            position: 'topleft',
+            text: 'Search',
+            title: 'Testing'
+        }).addTo(map);
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .className += ' fa fa-search';
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .title += 'Search for a place';
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'TOWNS OF NAMIBIA — Towns<br /><table><tr><td style="text-align: center;"><img src="legend/TOWNSOFNAMIBIATowns_3_Eenhana0.png" /></td><td>Eenhana</td></tr><tr><td style="text-align: center;"><img src="legend/TOWNSOFNAMIBIATowns_3_Gobabis1.png" /></td><td>Gobabis</td></tr><tr><td style="text-align: center;"><img src="legend/TOWNSOFNAMIBIATowns_3_KatimaMulilo2.png" /></td><td>Katima Mulilo</td></tr><tr><td style="text-align: center;"><img src="legend/TOWNSOFNAMIBIATowns_3_Keetmanshoop3.png" /></td><td>Keetmanshoop</td></tr><tr><td style="text-align: center;"><img src="legend/TOWNSOFNAMIBIATowns_3_Mariental4.png" /></td><td>Mariental</td></tr><tr><td style="text-align: center;"><img src="legend/TOWNSOFNAMIBIATowns_3_Opuwo5.png" /></td><td>Opuwo</td></tr><tr><td style="text-align: center;"><img src="legend/TOWNSOFNAMIBIATowns_3_Oshakati6.png" /></td><td>Oshakati</td></tr><tr><td style="text-align: center;"><img src="legend/TOWNSOFNAMIBIATowns_3_Otjiwarongo7.png" /></td><td>Otjiwarongo</td></tr><tr><td style="text-align: center;"><img src="legend/TOWNSOFNAMIBIATowns_3_Rundu8.png" /></td><td>Rundu</td></tr><tr><td style="text-align: center;"><img src="legend/TOWNSOFNAMIBIATowns_3_Swakopmund9.png" /></td><td>Swakopmund</td></tr><tr><td style="text-align: center;"><img src="legend/TOWNSOFNAMIBIATowns_3_Tsumeb10.png" /></td><td>Tsumeb</td></tr><tr><td style="text-align: center;"><img src="legend/TOWNSOFNAMIBIATowns_3_Uutapi11.png" /></td><td>Uutapi</td></tr><tr><td style="text-align: center;"><img src="legend/TOWNSOFNAMIBIATowns_3_Windhoek12.png" /></td><td>Windhoek</td></tr><tr><td style="text-align: center;"><img src="legend/TOWNSOFNAMIBIATowns_3_13.png" /></td><td></td></tr></table>': layer_TOWNSOFNAMIBIATowns_3,'<img src="legend/TOWNSOFNAMIBIARoads_2.png" /> TOWNS OF NAMIBIA — Roads': layer_TOWNSOFNAMIBIARoads_2,'<img src="legend/TOWNSOFNAMIBIARegions_1.png" /> TOWNS OF NAMIBIA — Regions': layer_TOWNSOFNAMIBIARegions_1,"OSM Standard": layer_OSMStandard_0,}).addTo(map);
+        setBounds();
+        var i = 0;
+        layer_TOWNSOFNAMIBIATowns_3.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['NAME'] !== null?String('<div style="color: #323232; font-size: 12pt; font-family: \'MS Shell Dlg 2\', sans-serif;">' + layer.feature.properties['NAME']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_TOWNSOFNAMIBIATowns_3'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        map.addControl(new L.Control.Search({
+            layer: layer_TOWNSOFNAMIBIATowns_3,
+            initial: false,
+            hideMarkerOnCollapse: true,
+            propertyName: 'NAME'}));
+        document.getElementsByClassName('search-button')[0].className +=
+         ' fa fa-binoculars';
+        resetLabels([layer_TOWNSOFNAMIBIARoads_2,layer_TOWNSOFNAMIBIATowns_3]);
+        map.on("zoomend", function(){
+            resetLabels([layer_TOWNSOFNAMIBIARoads_2,layer_TOWNSOFNAMIBIATowns_3]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_TOWNSOFNAMIBIARoads_2,layer_TOWNSOFNAMIBIATowns_3]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_TOWNSOFNAMIBIARoads_2,layer_TOWNSOFNAMIBIATowns_3]);
+        });
+        </script>
+    </body>
+</html>
